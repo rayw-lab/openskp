@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — All 6 languages: `unread_root_entities` on `Scene` and `InstancedScene` (#552)
+
+- Exposes the classic partial-read count directly on baked and instanced scenes across every port
+  (`Scene.unread_root_entities` / `InstancedScene.unread_root_entities` in Python, C++ and Rust;
+  `SkpScene.unreadRootEntities` / `InstancedScene.unreadRootEntities` in TypeScript;
+  `Scene.UnreadRootEntities` / `InstancedScene.UnreadRootEntities` in .NET;
+  `Scene.unreadRootEntities` / `InstancedScene.unreadRootEntities` in Dart), always `0` for
+  complete classic files, VFF files and scenes loaded from `.frag`, so downstream scene consumers
+  and add-ons do not need to parse warning log text.
+
 ### Added — Python: a `py.typed` marker (#572)
 
 - The wheel now ships `openskp/py.typed` and carries the `Typing :: Typed` classifier, so mypy
