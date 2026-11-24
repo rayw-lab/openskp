@@ -143,6 +143,9 @@ class GlbPrimitive:
             paint on either side (the front copies are in another
             primitive). They exist only to show the model's back face
             colour from behind; see :attr:`Scene.surface_primitives`.
+        back_triangles: Triangle offsets for separately emitted back
+            sides. A primitive can mix front and back triangles when they
+            share a material. Their front counterparts are still present.
     """
 
     positions: array
@@ -152,6 +155,7 @@ class GlbPrimitive:
     material_index: int
     geom_name: str
     unpainted_back: bool = False
+    back_triangles: array = field(default_factory=lambda: array("I"))
 
 
 @dataclass
@@ -263,9 +267,9 @@ class Scene:
     @property
     def surface_primitives(self) -> List[GlbPrimitive]:
         """:attr:`glb_primitives` without the back copies of faces that have
-        no paint on either side: what to use when the two sides of a surface
-        aren't shown separately (printing, CAD and BIM formats, counting or
-        measuring triangles). Every face is still there once."""
+        no paint on either side. Separately painted sides remain, so a
+        colour-capable exporter can preserve both. Geometry-only consumers
+        should additionally omit the offsets in ``back_triangles``."""
         return [p for p in self.glb_primitives if not p.unpainted_back]
 
 
@@ -687,6 +691,7 @@ def build_scene(
                         material_index=material_index,
                         geom_name=geom_name,
                         unpainted_back=unpainted_back,
+                        back_triangles=group["back_triangles"],
                     )
                 )
 

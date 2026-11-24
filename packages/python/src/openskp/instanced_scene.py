@@ -87,6 +87,8 @@ class LocalPrimitive:
     # The back copies of faces with no paint on either side; see
     # openskp.scene.GlbPrimitive.unpainted_back.
     unpainted_back: bool = False
+    # Triangle offsets for separately emitted back sides.
+    back_triangles: array = field(default_factory=lambda: array("I"))
 
 
 @dataclass
@@ -497,6 +499,7 @@ def build_instanced_scene(
                         material_name, group["colorized"], group["colorize_type"],
                     ),
                     unpainted_back=unpainted_back,
+                    back_triangles=group["back_triangles"],
                 )
             )
 
